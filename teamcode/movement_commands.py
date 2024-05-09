@@ -52,7 +52,7 @@ def deactivate():
             "dpadx": 0})
     
 def jump():
-    for i in range(3):
+    for i in range(4):
         drive_pub.send({"L1": 1, 
             "R1": 0, 
             "x": 1, 
@@ -67,6 +67,40 @@ def jump():
             "ry": 0, 
             "dpady": 0, 
             "dpadx": 0})
+        sleep(0.2)
+        drive_pub.send({"L1": 1, 
+            "R1": 0, 
+            "x": 0, 
+            "circle": 0, 
+            "triangle": 0, 
+            "L2": 0, 
+            "R2": 0, 
+            "ly": 0, 
+            "lx": 0, 
+            "rx": 0, 
+            "message_rate": 20, 
+            "ry": 0, 
+            "dpady": 0, 
+            "dpadx": 0})
+        sleep(0.2)
+
+        
+def drive(forward,strafe,turn):
+    # inputs should be between -1 and 1
+    drive_pub.send({"L1": 1, 
+            "R1": 0, 
+            "x": 0, 
+            "circle": 0, 
+            "triangle": 0, 
+            "L2": 0, 
+            "R2": 0, 
+            "ly": forward, 
+            "lx": strafe, 
+            "rx": turn, 
+            "message_rate": 20, 
+            "ry": 0, 
+            "dpady": 0, 
+            "dpadx": 0})
 
     
 # TODO: create functions that allow the robot to move around (forward,back,right,left,....)
@@ -75,12 +109,11 @@ def jump():
 # Each action needs to be press once then can be ignored (you don't have to keep L1 as 1 you can create an activate function the forget about it)   
 # TODO: make the robot move through the racing track
 if __name__ == "__main__":
+    time_forward = 10
+    message_rate = 20
     activate()
-    sleep(2)
-    jump()
-    sleep(2)
-    deactivate()
-    sleep(2)
-    jump()
-    sleep(2)
+    for i in range (message_rate*time_forward):
+        drive(1,0,0)
+        sleep(1/message_rate)
+    
     

@@ -51,7 +51,7 @@ def main():
 
         sleep(1)
     
-    os.system("sude systemctl stop robot")
+    os.system("sudo systemctl stop robot")
 
 
 
