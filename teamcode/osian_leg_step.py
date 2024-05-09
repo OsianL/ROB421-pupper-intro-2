@@ -16,30 +16,19 @@ from time import sleep
 
 zero = 500000
 ninety = 1500000
-one_eight = 2500000 
+one_eighty = 2500000 
 total_degrees = 180
 mid_degrees = 90
 
-total_pwm_change_first_half = ninety - zero
-total_pwm_change_second_half = one_eight - zero
 
-
-pwm_per_degree_first_half = total_pwm_change_first_half/mid_degrees
-pwm_per_degree_second_half = total_pwm_change_second_half/total_degrees
+pwm_per_degree = (one_eighty - zero) / total_degrees
 
 
 def move_servo(degree,output):
     global zero
-    degree
-    degree_finder = zero + (pwm_per_degree_first_half * degree)
+    degree = round(zero + (pwm_per_degree * degree))
 
-
-    os.system("echo " + str(degree_finder) + " > /sys/class/pwm/pwmchip0/" + str(output) + "/duty_cycle")
-    
-    #time.sleep(1)
-    #os.system("echo 2500000 > /sys/class/pwm/pwmchip0/pwm1/duty_cycle")
-    #time.sleep(1)
-    #os.system("echo 500000 > /sys/class/pwm/pwmchip0/pwm1/duty_cycle")
+    os.system("echo " + str(degree) + " > /sys/class/pwm/pwmchip0/" + str(output) + "/duty_cycle")
 
     print("done")
 
@@ -64,6 +53,8 @@ def main():
     #    move_servo(thigh_steps(i) + thigh_initial, thigh)
     #    move_servo(calf_steps(i) + calf_initial, calf)
     #    sleep(1)
+
+    os.system("sude systemctl stop robot")
 
 
 

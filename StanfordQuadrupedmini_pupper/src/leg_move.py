@@ -36,17 +36,23 @@ def move_servo15():
     else:
         degree_finder = zero + (pwm_per_degree_second_half * what_degree)
 
-    os.system("echo " + str(degree_finder) + " > /sys/class/pwm/pwmchip0/pwm1/duty_cycle")
+    #PWM signal must be an integer it seems.
+    #print("echo " + str(round(degree_finder)) + " > /sys/class/pwm/pwmchip0/pwm10/duty_cycle")
+    #print("echo 2500000 > /sys/class/pwm/pwmchip0/pwm10/duty_cycle")
+
+    os.system("echo " + str(round(degree_finder)) + " > /sys/class/pwm/pwmchip0/pwm10/duty_cycle")
     time.sleep(1)
-    os.system("echo 2500000 > /sys/class/pwm/pwmchip0/pwm1/duty_cycle")
+    
+    os.system("echo 2500000 > /sys/class/pwm/pwmchip0/pwm10/duty_cycle")
     time.sleep(1)
-    os.system("echo 500000 > /sys/class/pwm/pwmchip0/pwm1/duty_cycle")
+    os.system("echo 500000 > /sys/class/pwm/pwmchip0/pwm10/duty_cycle")
 
     print("done")
 
 def main():
-    os.system("sudo systemctl stop robot")
+    #os.system("sudo systemctl stop robot")
     move_servo15()
+    #os.system("sude systemctl stop robot")
 
 if __name__ == "__main__":
     main()
