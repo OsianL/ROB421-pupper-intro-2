@@ -40,24 +40,25 @@ def main():
 
     thigh = "pwm14"
     calf = "pwm13"
-    thigh_initial = 90
-    calf_initial = 90
+    thigh_initial = 30
+    calf_initial = 25
     
     #Create a list of positions:
     steps = [0,1,2,3,4]
-    thigh_steps = [30,45,30,15,0]
-    calf_steps = [30,-14,-5,-2,0]
+    thigh_steps = [45,80,80,60,45,30]
+    calf_steps = [5,0,15,15,20,25]
     
     #initialize our servos:
     move_servo(thigh_initial,thigh)
     move_servo(calf_initial,calf)
     sleep(1)
     
-    for i in steps:
-        print(i)
-        move_servo(thigh_steps[i] + thigh_initial, thigh)
-        move_servo(calf_steps[i] + calf_initial, calf)
-        sleep(1)
+    for j in steps:
+        for i in steps:
+            print(i)
+            move_servo(thigh_steps[i], thigh)
+            move_servo(calf_steps[i], calf)
+            sleep(1)
 
     os.system("sudo systemctl stop robot") 
 

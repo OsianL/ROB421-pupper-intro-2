@@ -21,7 +21,7 @@ total_degrees = 180
 mid_degrees = 90
 
 
-pwm_per_degree = (one_eighty - zero) / total_degrees
+pwm_per_degree = int((one_eighty - zero) / total_degrees)
 
 
 def move_servo(degree,output):
@@ -46,8 +46,8 @@ def main():
         move_servo(pose1,port1)
         move_servo(pose2,port2)
 
-        pose1 = input("Servo 1 Desired Angle: ")
-        pose2 = input("Servo 2 Desired Angle: ")
+        pose1 = int(input("Servo 1 Desired Angle: "))
+        pose2 = int(input("Servo 2 Desired Angle: "))
 
         sleep(1)
     
