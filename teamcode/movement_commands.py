@@ -35,6 +35,22 @@ def activate():
             "dpady": 0, 
             "dpadx": 0})
     
+def trot():
+    drive_pub.send({"L1": 0, 
+            "R1": 1, 
+            "x": 0, 
+            "circle": 0, 
+            "triangle": 0, 
+            "L2": 0, 
+            "R2": 0, 
+            "ly": 0, 
+            "lx": 0, 
+            "rx": 0, 
+            "message_rate": 20, 
+            "ry": 0, 
+            "dpady": 0, 
+            "dpadx": 0})    
+    
 def deactivate():
     drive_pub.send({"L1": 1, 
             "R1": 0, 
@@ -84,10 +100,10 @@ def jump():
             "dpadx": 0})
         sleep(0.2)
 
-        
+
 def drive(forward,strafe,turn):
     # inputs should be between -1 and 1
-    drive_pub.send({"L1": 1, 
+    drive_pub.send({"L1": 0, 
             "R1": 0, 
             "x": 0, 
             "circle": 0, 
@@ -109,11 +125,14 @@ def drive(forward,strafe,turn):
 # Each action needs to be press once then can be ignored (you don't have to keep L1 as 1 you can create an activate function the forget about it)   
 # TODO: make the robot move through the racing track
 if __name__ == "__main__":
-    time_forward = 10
+    time_forward = 5
     message_rate = 20
     activate()
+    sleep(2)
+    trot()
+    sleep(1)
     for i in range (message_rate*time_forward):
         drive(1,0,0)
-        sleep(1/message_rate)
+        sleep(5/message_rate)
     
     
