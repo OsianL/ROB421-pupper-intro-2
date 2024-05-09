@@ -58,7 +58,7 @@ def main():
             print(i)
             move_servo(thigh_steps[i], thigh)
             move_servo(calf_steps[i], calf)
-            sleep(1)
+            sleep(0.1)
 
     os.system("sudo systemctl stop robot") 
 
