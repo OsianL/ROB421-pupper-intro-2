@@ -38,23 +38,28 @@ def main():
     #Servos J2 and J3 are FR hip and calf respectively
     # This corresponds to pwm15 and pwm14
 
-    thigh = "pwm15"
-    calf = "pwm14"
+    thigh = "pwm14"
+    calf = "pwm13"
     thigh_initial = 90
     calf_initial = 90
+    
     #Create a list of positions:
     steps = [0,1,2,3,4]
     thigh_steps = [30,45,30,15,0]
     calf_steps = [30,-14,-5,-2,0]
+    
+    #initialize our servos:
     move_servo(thigh_initial,thigh)
     move_servo(calf_initial,calf)
     sleep(1)
-    #for i in steps:
-    #    move_servo(thigh_steps(i) + thigh_initial, thigh)
-    #    move_servo(calf_steps(i) + calf_initial, calf)
-    #    sleep(1)
+    
+    for i in steps:
+        print(i)
+        move_servo(thigh_steps[i] + thigh_initial, thigh)
+        move_servo(calf_steps[i] + calf_initial, calf)
+        sleep(1)
 
-    os.system("sude systemctl stop robot")
+    os.system("sudo systemctl stop robot") 
 
 
 
