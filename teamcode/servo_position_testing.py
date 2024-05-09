@@ -27,10 +27,8 @@ pwm_per_degree = (one_eighty - zero) / total_degrees
 def move_servo(degree,output):
     global zero
     degree = round(zero + (pwm_per_degree * degree))
-
     os.system("echo " + str(degree) + " > /sys/class/pwm/pwmchip0/" + str(output) + "/duty_cycle")
 
-    print("done")
 
 def main():
     os.system("sudo systemctl stop robot")
@@ -38,22 +36,21 @@ def main():
     #Servos J2 and J3 are FR hip and calf respectively
     # This corresponds to pwm15 and pwm14
 
-    thigh = "pwm14"
-    calf = "pwm13"
-    thigh_initial = 90
-    calf_initial = 90
-    #Create a list of positions:
-    steps = [0,1,2,3,4]
-    thigh_steps = [30,45,30,15,0]
-    calf_steps = [30,-14,-5,-2,0]
-    move_servo(thigh_initial,thigh)
-    move_servo(calf_initial,calf)
-    sleep(1)
-    #for i in steps:
-    #    move_servo(thigh_steps(i) + thigh_initial, thigh)
-    #    move_servo(calf_steps(i) + calf_initial, calf)
-    #    sleep(1)
+    port1 = "pwm14"
+    pose1 = 0
+    port2 = "pwm13"
+    pose2 = 0
 
+    while True:
+
+        move_servo(pose1,port1)
+        move_servo(pose2,port2)
+
+        pose1 = input("Servo 1 Desired Angle: ")
+        pose2 = input("Servo 2 Desired Angle: ")
+
+        sleep(1)
+    
     os.system("sude systemctl stop robot")
 
 
