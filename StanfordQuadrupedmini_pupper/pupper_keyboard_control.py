@@ -36,6 +36,7 @@
 #
 
 from sshkeyboard import listen_keyboard
+import asyncio
 import numpy as np
 import time
 from src.Controller import Controller
@@ -49,8 +50,9 @@ from MangDang.mini_pupper.display import Display
 
 keypressed = ''
 
-def press(key):
-    global keypressed 
+async def press(key):
+    global keypressed
+    print("\n " + key)
     keypressed = key
     
 
@@ -81,9 +83,9 @@ def main():
     #Handle the first loop iteration
     firstLoopFlag = True
     last_loop = time.time()
-
-    listen_keyboard(on_press=press)
     
+    listen_keyboard(on_press=press)
+
     while True:
         now = time.time()
         if now - last_loop < config.dt:
