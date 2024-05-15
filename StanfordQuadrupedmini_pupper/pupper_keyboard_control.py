@@ -46,26 +46,19 @@ from MangDang.mini_pupper.Config import Configuration
 from pupper.Kinematics import four_legs_inverse_kinematics
 from MangDang.mini_pupper.display import Display
 
-def press(key):
-    global command
-    global state
-    #Check for keyboard presses and adjust velocity accordingly:
-    if(key == 'w'):
-        command.horizontal_velocity = np.array([0.2,0])
-    elif(key == 's'):
-        command.horizontal_velocity = np.array([-0.2,0])
-    elif(key == 'd'):
-        command.horizontal_velocity = np.array([0,0.2])
-    elif(key == 'a'):
-        command.horizontal_velocity = np.array([0,-0.2])
-    elif(key == 'r'):
-        command.horizontal_velocity = np.array([0,0])
-        state.behavior_state = BehaviorState.DEACTIVATED
 
+keypressed = ''
+
+def press(key):
+    global keypressed 
+    keypressed = key
+    
 
 def main():
     """Main program
     """
+
+    global keypressed
     
     # Create config
     config = Configuration()
@@ -88,6 +81,8 @@ def main():
     #Handle the first loop iteration
     firstLoopFlag = True
     last_loop = time.time()
+
+    listen_keyboard(on_press=press)
     
     while True:
         now = time.time()
@@ -102,8 +97,22 @@ def main():
             
         last_loop = time.time()
         
-        listen_keyboard(on_press=press)
-        
+        #adjust velocity based on keyboard presses:
+        if(keypressed == 'w'):
+            command.horizontal_velocity = np.array([0.2,0])
+        elif(keypressed == 's'):
+            command.horizontal_velocity = np.array([-0.2,0])
+        elif(keypressed == 'd'):
+            command.horizontal_velocity = np.array([0,0.2])
+        elif(keypressed == 'a'):
+            command.horizontal_velocity = np.array([0,-0.2])
+        elif(keypressed == None):
+            command.horizontal_velocity = np.array([0,0])
+        elif(keypressed == 'r'):
+            command.horizontal_velocity = np.array([0,0])
+            state.behavior_state = BehaviorState.DEACTIVATED
+            break
+
 		
         controller.run(state, command, disp)
         hardware_interface.set_actuator_postions(state.joint_angles)
