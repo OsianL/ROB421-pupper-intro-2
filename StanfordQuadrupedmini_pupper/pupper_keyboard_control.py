@@ -35,7 +35,7 @@
 #   Reference: https://github.com/stanfordroboticsclub/StanfordQuadruped/blob/master/run_robot.py
 #
 
-import keyboard as kb
+from sshkeyboard import listen_keyboard
 import numpy as np
 import time
 from src.Controller import Controller
@@ -45,6 +45,23 @@ from MangDang.mini_pupper.HardwareInterface import HardwareInterface
 from MangDang.mini_pupper.Config import Configuration
 from pupper.Kinematics import four_legs_inverse_kinematics
 from MangDang.mini_pupper.display import Display
+
+def press(key):
+    global command
+    global state
+    #Check for keyboard presses and adjust velocity accordingly:
+    if(key == 'w'):
+        command.horizontal_velocity = np.array([0.2,0])
+    elif(key == 's'):
+        command.horizontal_velocity = np.array([-0.2,0])
+    elif(key == 'd'):
+        command.horizontal_velocity = np.array([0,0.2])
+    elif(key == 'a'):
+        command.horizontal_velocity = np.array([0,-0.2])
+    elif(key == 'r'):
+        command.horizontal_velocity = np.array([0,0])
+        state.behavior_state = BehaviorState.DEACTIVATED
+
 
 def main():
     """Main program
@@ -85,19 +102,8 @@ def main():
             
         last_loop = time.time()
         
-        #Check for keyboard presses and adjust velocity accordingly:
-        if(kb.is_pressed('w')):
-            command.horizontal_velocity = np.array([0.2,0])
-        elif(kb.is_pressed('s')):
-            command.horizontal_velocity = np.array([-0.2,0])
-        elif(kb.is_pressed('d')):
-            command.horizontal_velocity = np.array([0,0.2])
-        elif(kb.is_pressed('a')):
-            command.horizontal_velocity = np.array([0,-0.2])
-        elif(kb.is_pressed('e')):
-            command.horizontal_velocity = np.array([0,0])
-            state.behavior_state = BehaviorState.DEACTIVATED
-            break
+        listen_keyboard(on_press=press)
+        
 		
         controller.run(state, command, disp)
         hardware_interface.set_actuator_postions(state.joint_angles)
