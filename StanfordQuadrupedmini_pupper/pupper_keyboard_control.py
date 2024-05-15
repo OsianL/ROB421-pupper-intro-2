@@ -36,7 +36,7 @@
 #
 
 from sshkeyboard import listen_keyboard
-import asyncio
+import threading
 import numpy as np
 import time
 from src.Controller import Controller
@@ -50,11 +50,9 @@ from MangDang.mini_pupper.display import Display
 
 keypressed = ''
 
-async def press(key):
-    global keypressed
-    print("\n " + key)
+def press(key):
+    global keypressed 
     keypressed = key
-    
 
 def main():
     """Main program
@@ -84,8 +82,6 @@ def main():
     firstLoopFlag = True
     last_loop = time.time()
     
-    listen_keyboard(on_press=press)
-
     while True:
         now = time.time()
         if now - last_loop < config.dt:
@@ -114,9 +110,18 @@ def main():
             command.horizontal_velocity = np.array([0,0])
             state.behavior_state = BehaviorState.DEACTIVATED
             break
-
 		
         controller.run(state, command, disp)
         hardware_interface.set_actuator_postions(state.joint_angles)
         
-main()
+
+t1 = threading.Thread(target=listen_keyboard,args=(press))
+t2 = threading.Thread(target=main)
+
+t1.start()
+t2.start()
+
+t1.join()
+t2.join()
+
+print("Done")
