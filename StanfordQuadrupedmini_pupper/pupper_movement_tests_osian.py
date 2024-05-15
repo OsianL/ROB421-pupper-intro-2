@@ -37,7 +37,6 @@
 
 import numpy as np
 import time
-import serial
 from src.Controller import Controller
 from src.Command import Command
 from src.State import BehaviorState, State
@@ -66,16 +65,16 @@ def main():
  
     command = Command()
 
-    # Open Serial camera module device
-    ser = serial.Serial('/dev/ttyAMA1',115200)
-    if(False == ser.isOpen()):
-    	return
-    	
+    # # Open Serial camera module device
+    # ser = serial.Serial('/dev/ttyAMA1',115200)
+    # if(False == ser.isOpen()):
+    #     return
+
     data = 0
     firstLoopFlag = True
     last_loop = time.time()
     
-    mode = input('input mode: 0 is lineFollowing and 1 is faceFollowing : ')
+    mode = input('input mode: 0 is Forward and 1 is horizontal: ')
     
     while True:
         now = time.time()
@@ -89,23 +88,21 @@ def main():
             state.behavior_state = BehaviorState.TROT
             
         last_loop = time.time()
-        size = ser.inWaiting()
+        # size = ser.inWaiting()
 
-        if size != 0:
-            data = ser.readline(size)
-            if size > 10:
-                data = 0
-            else:
-                data = float(data)
+        # if size != 0:
+        #     data = ser.readline(size)
+        #     if size > 10:
+        #         data = 0
+        #     else:
+        #         data = float(data)
         
         if(mode == '0'):
-            command.horizontal_velocity = np.array([0.1,0])
+            command.horizontal_velocity = np.array([1,0])
         elif(mode == '1'):
-            command.horizontal_velocity = np.array([0.1,0])
-        
-        command.yaw_rate = data * 0.75		
+            command.horizontal_velocity = np.array([0,1])
 		
-        controller.run(state, command,disp)
-        hardware_interface.set_actuator_postions(state.joint_angles)		
+        controller.run(state, command, disp)
+        hardware_interface.set_actuator_postions(state.joint_angles)
         
 main()
