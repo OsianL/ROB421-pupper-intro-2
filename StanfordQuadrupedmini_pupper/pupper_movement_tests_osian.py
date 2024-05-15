@@ -60,17 +60,14 @@ def main():
         config,
         four_legs_inverse_kinematics,
     )
+
+    #Setup State and command instances
     state = State()
     state.quat_orientation = np.array([1,0,0,0])
  
     command = Command()
 
-    # # Open Serial camera module device
-    # ser = serial.Serial('/dev/ttyAMA1',115200)
-    # if(False == ser.isOpen()):
-    #     return
-
-    data = 0
+    #Handle the first loop iteration
     firstLoopFlag = True
     last_loop = time.time()
     
@@ -88,14 +85,6 @@ def main():
             state.behavior_state = BehaviorState.TROT
             
         last_loop = time.time()
-        # size = ser.inWaiting()
-
-        # if size != 0:
-        #     data = ser.readline(size)
-        #     if size > 10:
-        #         data = 0
-        #     else:
-        #         data = float(data)
         
         if(mode == '0'):
             command.horizontal_velocity = np.array([0.15,0])
