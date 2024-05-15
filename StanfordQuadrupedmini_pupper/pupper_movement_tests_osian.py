@@ -98,9 +98,9 @@ def main():
         #         data = float(data)
         
         if(mode == '0'):
-            command.horizontal_velocity = np.array([1,0])
+            command.horizontal_velocity = np.array([0.15,0])
         elif(mode == '1'):
-            command.horizontal_velocity = np.array([0,1])
+            command.horizontal_velocity = np.array([0,0.15])
 		
         controller.run(state, command, disp)
         hardware_interface.set_actuator_postions(state.joint_angles)
