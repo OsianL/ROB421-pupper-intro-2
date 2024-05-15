@@ -69,8 +69,8 @@ def main():
     # Open Serial camera module device
     ser = serial.Serial('/dev/ttyAMA1',115200)
     if(False == ser.isOpen()):
-        return
-    
+    	return
+    	
     data = 0
     firstLoopFlag = True
     last_loop = time.time()

@@ -133,9 +133,10 @@ if __name__ == "__main__":
     sleep(1)
     for i in range (message_rate*time_forward):
         print (i)
-        drive(1,0,0)
+        drive(0,1,0)
         sleep(1/message_rate)
     trot()
     deactivate()
+    sleep(2)
     
     
