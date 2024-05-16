@@ -40,7 +40,7 @@ def main():
     thigh = "pwm14"
     calf = "pwm13"
     #Sets the position for the initialization
-    hip_initial = -30
+    hip_initial = -45
     thigh_initial = 30
     calf_initial = 25
     
