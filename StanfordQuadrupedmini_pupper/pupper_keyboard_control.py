@@ -46,17 +46,19 @@ from MangDang.mini_pupper.Config import Configuration
 from pupper.Kinematics import four_legs_inverse_kinematics
 from MangDang.mini_pupper.display import Display
 
-
+keypressed = ""
 
 
 def main():
+    
     """Main program
     """
 
     screen = curses.initscr()
     curses.noecho()
     curses.cbreak()
-    screen.keypad(True) 
+    screen.keypad(True)
+    screen.nodelay()
     
     # Create config
     config = Configuration()
