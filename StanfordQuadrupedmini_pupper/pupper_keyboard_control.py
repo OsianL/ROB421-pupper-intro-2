@@ -46,7 +46,6 @@ from MangDang.mini_pupper.Config import Configuration
 from pupper.Kinematics import four_legs_inverse_kinematics
 from MangDang.mini_pupper.display import Display
 
-keypressed = ""
 
 
 def main():
@@ -54,11 +53,15 @@ def main():
     """Main program
     """
 
+    keypressed = ""
+    prevkey = ""
+
     screen = curses.initscr()
     curses.noecho()
     curses.cbreak()
     screen.keypad(True)
-    screen.nodelay()
+    screen.nodelay(True)
+    #screen.timeout(5)
     
     # Create config
     config = Configuration()
@@ -95,8 +98,15 @@ def main():
                 state.behavior_state = BehaviorState.TROT
                 
             last_loop = time.time()
+           
+            try:
+                prevkey = keypressed
+                keypressed = screen.getkey()
+            except:
+                keypressed = prevkey
             
-            keypressed = screen.getch()
+            screen.addstr(str(keypressed))
+            screen.refresh()
 
             #adjust velocity based on keyboard presses:
             if(keypressed == 'w'):
@@ -107,7 +117,7 @@ def main():
                 command.horizontal_velocity = np.array([0,0.2])
             elif(keypressed == 'a'):
                 command.horizontal_velocity = np.array([0,-0.2])
-            elif(keypressed == None):
+            elif(keypressed == 'p'):
                 command.horizontal_velocity = np.array([0,0])
             elif(keypressed == 'r'):
                 command.horizontal_velocity = np.array([0,0])
