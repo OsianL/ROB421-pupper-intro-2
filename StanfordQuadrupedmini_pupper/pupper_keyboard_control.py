@@ -35,8 +35,7 @@
 #   Reference: https://github.com/stanfordroboticsclub/StanfordQuadruped/blob/master/run_robot.py
 #
 
-from sshkeyboard import listen_keyboard
-import threading
+import curses
 import numpy as np
 import time
 from src.Controller import Controller
@@ -48,17 +47,16 @@ from pupper.Kinematics import four_legs_inverse_kinematics
 from MangDang.mini_pupper.display import Display
 
 
-keypressed = ''
 
-def press(key):
-    global keypressed 
-    keypressed = key
 
 def main():
     """Main program
     """
 
-    global keypressed
+    screen = curses.initscr()
+    curses.noecho()
+    curses.cbreak()
+    screen.keypad(True) 
     
     # Create config
     config = Configuration()
@@ -82,46 +80,47 @@ def main():
     firstLoopFlag = True
     last_loop = time.time()
     
-    while True:
-        now = time.time()
-        if now - last_loop < config.dt:
-            continue
+    try:
+        while True:
+            now = time.time()
+            if now - last_loop < config.dt:
+                continue
 
-        if(firstLoopFlag):
-            firstLoopFlag = False
-            state.behavior_state = BehaviorState.REST
-        else:
-            state.behavior_state = BehaviorState.TROT
+            if(firstLoopFlag):
+                firstLoopFlag = False
+                state.behavior_state = BehaviorState.REST
+            else:
+                state.behavior_state = BehaviorState.TROT
+                
+            last_loop = time.time()
             
-        last_loop = time.time()
+            keypressed = screen.getch()
+
+            #adjust velocity based on keyboard presses:
+            if(keypressed == 'w'):
+                command.horizontal_velocity = np.array([0.2,0])
+            elif(keypressed == 's'):
+                command.horizontal_velocity = np.array([-0.2,0])
+            elif(keypressed == 'd'):
+                command.horizontal_velocity = np.array([0,0.2])
+            elif(keypressed == 'a'):
+                command.horizontal_velocity = np.array([0,-0.2])
+            elif(keypressed == None):
+                command.horizontal_velocity = np.array([0,0])
+            elif(keypressed == 'r'):
+                command.horizontal_velocity = np.array([0,0])
+                state.behavior_state = BehaviorState.DEACTIVATED
+                break
+            
+            controller.run(state, command, disp)
+            hardware_interface.set_actuator_postions(state.joint_angles)
+    finally:
+        curses.nocbreak()
+        screen.keypad(0)
+        curses.echo()
+        curses.endwin()
         
-        #adjust velocity based on keyboard presses:
-        if(keypressed == 'w'):
-            command.horizontal_velocity = np.array([0.2,0])
-        elif(keypressed == 's'):
-            command.horizontal_velocity = np.array([-0.2,0])
-        elif(keypressed == 'd'):
-            command.horizontal_velocity = np.array([0,0.2])
-        elif(keypressed == 'a'):
-            command.horizontal_velocity = np.array([0,-0.2])
-        elif(keypressed == None):
-            command.horizontal_velocity = np.array([0,0])
-        elif(keypressed == 'r'):
-            command.horizontal_velocity = np.array([0,0])
-            state.behavior_state = BehaviorState.DEACTIVATED
-            break
-		
-        controller.run(state, command, disp)
-        hardware_interface.set_actuator_postions(state.joint_angles)
-        
 
-t1 = threading.Thread(target=listen_keyboard,args=(press))
-t2 = threading.Thread(target=main)
 
-t1.start()
-t2.start()
-
-t1.join()
-t2.join()
-
+main()
 print("Done")
