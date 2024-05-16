@@ -46,7 +46,7 @@ def main():
     
     #Create a list of positions:
     steps = [0,1,2,3,4] #This essentially sets the "frame rate" for the motion
-    hip_steps = [-20,-20,-20,-10,-10,-10] #These set the degree that each servo should rotate to at each step
+    hip_steps = [10,10,10,30,30,30] #These set the degree that each servo should rotate to at each step
     thigh_steps = [45,80,80,60,45,30]
     calf_steps = [5,0,15,15,20,25]
     
