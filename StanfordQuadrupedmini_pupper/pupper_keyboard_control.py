@@ -117,10 +117,15 @@ def main():
                 command.horizontal_velocity = np.array([0,0.2])
             elif(keypressed == 'a'):
                 command.horizontal_velocity = np.array([0,-0.2])
+            elif(keypressed == 'e'):
+                command.yaw_rate = 0.7
+            elif(keypressed == 'q'):
+                command.yaw_rate = -0.7
             elif(keypressed == 'p'):
                 command.horizontal_velocity = np.array([0,0])
             elif(keypressed == 'r'):
                 command.horizontal_velocity = np.array([0,0])
+                command.yaw_rate = 0.0
                 state.behavior_state = BehaviorState.DEACTIVATED
                 break
             
