@@ -40,13 +40,13 @@ def main():
     thigh = "pwm14"
     calf = "pwm13"
     #Sets the position for the initialization
-    hip_initial = 0
+    hip_initial = -10
     thigh_initial = 30
     calf_initial = 25
     
     #Create a list of positions:
     steps = [0,1,2,3,4] #This essentially sets the "frame rate" for the motion
-    hip_steps = [5,5,5,0,0,0] #These set the degree that each servo should rotate to at each step
+    hip_steps = [-5,-5,-5,0,0,0] #These set the degree that each servo should rotate to at each step
     thigh_steps = [45,80,80,60,45,30]
     calf_steps = [5,0,15,15,20,25]
     
