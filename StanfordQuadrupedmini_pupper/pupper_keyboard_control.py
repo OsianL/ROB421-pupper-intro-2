@@ -58,7 +58,7 @@ def main():
     curses.noecho()
     curses.cbreak()
     screen.keypad(True)
-    screen.nodelay()
+    screen.timeout(5)
     
     # Create config
     config = Configuration()
