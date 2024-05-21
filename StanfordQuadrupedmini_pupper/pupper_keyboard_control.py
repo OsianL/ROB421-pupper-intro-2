@@ -123,9 +123,15 @@ def main():
                 command.yaw_rate = -0.7
             elif(keypressed == 'p'):
                 command.horizontal_velocity = np.array([0,0])
+                command.yaw_rate = 0.0
+            elif(keypressed == 'i'):
+                command.pitch += 0.1
+            elif(keypressed == 'k'):
+                command.pitch -= 0.1
             elif(keypressed == 'r'):
                 command.horizontal_velocity = np.array([0,0])
                 command.yaw_rate = 0.0
+                command.pitch = 0.0
                 state.behavior_state = BehaviorState.DEACTIVATED
                 break
             
