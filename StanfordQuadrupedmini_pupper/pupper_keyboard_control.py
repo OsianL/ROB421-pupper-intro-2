@@ -126,10 +126,12 @@ def main():
                 command.horizontal_velocity = np.array([0,0])
                 command.yaw_rate = 0.0
             elif(keypressed == 'i'):
-                keypressed == 'p'
+                keypressed = 'p'
+                prevkey = 'p'
                 command.pitch += 0.1
             elif(keypressed == 'k'):
-                keypressed == 'p'
+                keypressed = 'p'
+                prevkey = 'p'
                 command.pitch -= 0.1
             elif(keypressed == 'r'):
                 command.horizontal_velocity = np.array([0,0])
