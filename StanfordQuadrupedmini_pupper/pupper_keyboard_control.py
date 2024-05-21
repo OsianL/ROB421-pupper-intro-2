@@ -56,13 +56,14 @@ def main():
     keypressed = ""
     prevkey = ""
 
+    #initialize curses for keyboard input
     screen = curses.initscr()
     curses.noecho()
     curses.cbreak()
     screen.keypad(True)
     screen.nodelay(True)
     #screen.timeout(5)
-    
+
     # Create config
     config = Configuration()
     hardware_interface = HardwareInterface()
