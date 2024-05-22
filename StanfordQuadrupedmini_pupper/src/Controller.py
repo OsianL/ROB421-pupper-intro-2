@@ -52,6 +52,7 @@ class Controller:
         """
         contact_modes = self.gait_controller.contacts(state.ticks)
         new_foot_locations = np.zeros((3, 4))
+
         for leg_index in range(4):
             contact_mode = contact_modes[leg_index]
             foot_location = state.foot_locations[:, leg_index]
@@ -67,12 +68,13 @@ class Controller:
                     state,
                     command
                 )
+                #print("else")
             new_foot_locations[:, leg_index] = new_location
 
-            #stupid hack to make the root jiggle as it walks
-            if ((command.roll_step == True) and (contact_modes[1] == 1)):
-                    command.roll *= -1
-                    print(f"goofy time: {command.roll}")
+            #stupid hack to try and make the root jiggle as it walks
+            #if ((command.roll_step == True) and (swing_proportion > 0.2)):
+            #        command.roll *= -1
+            #        print(f"goofy time: {command.roll}, and {swing_proportion}")
 
         return new_foot_locations, contact_modes
 
