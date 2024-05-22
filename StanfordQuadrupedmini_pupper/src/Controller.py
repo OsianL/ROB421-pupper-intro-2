@@ -69,8 +69,8 @@ class Controller:
                 )
             new_foot_locations[:, leg_index] = new_location
 
-            #stupid hack to make the root giggle as it walks
-            if (command.roll_step == True and contact_modes[1] == 1):
+            #stupid hack to make the root jiggle as it walks
+            if ((command.roll_step == True) and (contact_modes[1] == 1)):
                     command.roll *= -1
                     print(f"goofy time: {command.roll}")
 
