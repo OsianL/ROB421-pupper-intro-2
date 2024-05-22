@@ -133,6 +133,30 @@ def main():
                 keypressed = 'p'
                 prevkey = 'p'
                 command.pitch -= 0.1
+            elif(keypressed == 'g'):
+                keypressed = 'p'
+                prevkey = 'p'
+                command.roll -=0.1
+            elif(keypressed == 'h'):
+                keypressed = 'p'
+                prevkey = 'p'
+                command.roll +=0.1
+            elif(keypressed == 'u'):
+                keypressed = 'p'
+                prevkey = 'p'
+                command.height +=0.1
+            elif(keypressed == 'j'):
+                keypressed = 'p'
+                prevkey = 'p'
+                command.height -=0.1
+            elif(keypressed == 'm'):
+                keypressed = 'p'
+                prevkey = 'p'
+                state.behavior_state = BehaviorState.REST
+            elif(keypressed == 'n'):
+                keypressed = 'p'
+                prevkey = 'p'
+                state.behavior_state = BehaviorState.TROT
             elif(keypressed == 'r'):
                 command.horizontal_velocity = np.array([0,0])
                 command.yaw_rate = 0.0
