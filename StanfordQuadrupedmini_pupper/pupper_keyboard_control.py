@@ -92,11 +92,11 @@ def main():
             if now - last_loop < config.dt:
                 continue
 
-            if(firstLoopFlag):
-                firstLoopFlag = False
-                state.behavior_state = BehaviorState.REST
-            else:
-                state.behavior_state = BehaviorState.TROT
+            #if(firstLoopFlag):
+            #    firstLoopFlag = False
+            #    state.behavior_state = BehaviorState.REST
+            #else:
+            #    state.behavior_state = BehaviorState.TROT
                 
             last_loop = time.time()
            
@@ -144,11 +144,11 @@ def main():
             elif(keypressed == 'u'):
                 keypressed = 'p'
                 prevkey = 'p'
-                command.height +=0.1
+                command.height +=0.01
             elif(keypressed == 'j'):
                 keypressed = 'p'
                 prevkey = 'p'
-                command.height -=0.1
+                command.height -=0.01
             elif(keypressed == 'm'):
                 keypressed = 'p'
                 prevkey = 'p'

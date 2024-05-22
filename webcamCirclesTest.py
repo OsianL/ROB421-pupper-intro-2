@@ -3,7 +3,7 @@ import numpy as np
 
 def track_circles_in_webcam():
     # 0 is default, I changed to 1 to get the back camera of my surface
-    cap = cv2.VideoCapture(1)  # Initialize webcam (0 is usually the default webcam)
+    cap = cv2.VideoCapture(0)  # Initialize webcam (0 is usually the default webcam)
 
     while True:
         ret, frame = cap.read()  # Read a frame from the webcam
@@ -26,7 +26,7 @@ def track_circles_in_webcam():
         mask = cv2.inRange(hsv, (5, 150, 50), (25, 255, 255))
         mask_blurred = cv2.GaussianBlur(mask, (9,9),0)
 
-        cv2.imshow("orange mask", mask_blurred)
+        #cv2.imshow("orange mask", mask_blurred)
 
         circles = cv2.HoughCircles(mask_blurred, cv2.HOUGH_GRADIENT, dp=1, minDist=50, 
                                    param1=200, param2=30, minRadius=10, maxRadius=100)
@@ -39,7 +39,7 @@ def track_circles_in_webcam():
                 cv2.rectangle(frame, (x - 5, y - 5), (x + 5, y + 5), (0, 128, 255), -1)  # Draw the center
             print("Circles: ", circles)
 
-        cv2.imshow("Circle Tracker", frame)  # Display the frame
+        #cv2.imshow("Circle Tracker", frame)  # Display the frame
 
         if cv2.waitKey(1) & 0xFF == ord('q'):  # Press 'q' to exit
             break
