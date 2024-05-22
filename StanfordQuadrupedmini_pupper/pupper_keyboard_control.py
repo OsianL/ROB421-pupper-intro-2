@@ -83,7 +83,6 @@ def main():
     command = Command()
 
     #Handle the first loop iteration
-    firstLoopFlag = True
     last_loop = time.time()
     
     try:
@@ -91,13 +90,6 @@ def main():
             now = time.time()
             if now - last_loop < config.dt:
                 continue
-
-            #if(firstLoopFlag):
-            #    firstLoopFlag = False
-            #    state.behavior_state = BehaviorState.REST
-            #else:
-            #    state.behavior_state = BehaviorState.TROT
-                
             last_loop = time.time()
            
             try:
@@ -149,6 +141,10 @@ def main():
                 keypressed = 'p'
                 prevkey = 'p'
                 command.height -=0.01
+            elif(keypressed == 'c'):
+                command.roll_step = True
+            elif(keypressed == 'v'):
+                command.roll_step = False
             elif(keypressed == 'm'):
                 keypressed = 'p'
                 prevkey = 'p'

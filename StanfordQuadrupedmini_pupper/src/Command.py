@@ -17,3 +17,4 @@ class Command:
         self.trot_event = False
         self.activate_event = False
         self.dance_activate_event = False
+        self.roll_step = False
