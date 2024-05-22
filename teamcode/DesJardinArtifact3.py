@@ -35,9 +35,9 @@
 #   Reference: https://github.com/stanfordroboticsclub/StanfordQuadruped/blob/master/run_robot.py
 #
 
+import curses
 import numpy as np
 import time
-import serial
 from src.Controller import Controller
 from src.Command import Command
 from src.State import BehaviorState, State
@@ -46,10 +46,24 @@ from MangDang.mini_pupper.Config import Configuration
 from pupper.Kinematics import four_legs_inverse_kinematics
 from MangDang.mini_pupper.display import Display
 
+
+
 def main():
+    
     """Main program
     """
-    
+
+    keypressed = ""
+    prevkey = ""
+
+    #initialize curses for keyboard input
+    screen = curses.initscr()
+    curses.noecho()
+    curses.cbreak()
+    screen.keypad(True)
+    screen.nodelay(True)
+    #screen.timeout(5)
+
     # Create config
     config = Configuration()
     hardware_interface = HardwareInterface()
@@ -61,19 +75,80 @@ def main():
         config,
         four_legs_inverse_kinematics,
     )
+
+    #Setup State and command instances
     state = State()
     state.quat_orientation = np.array([1,0,0,0])
  
     command = Command()
+
+    #Handle the first loop iteration
+    firstLoopFlag = True
+    last_loop = time.time()
+    
+    try:
+        while True:
+            now = time.time()
+            if now - last_loop < config.dt:
+                continue
+
+            if(firstLoopFlag):
+                firstLoopFlag = False
+                state.behavior_state = BehaviorState.REST
+            else:
+                state.behavior_state = BehaviorState.TROT
+                
+            last_loop = time.time()
+           
+            try:
+                prevkey = keypressed
+                keypressed = screen.getkey()
+            except:
+                keypressed = prevkey
+            
+            screen.addstr(str(keypressed))
+            screen.refresh()
+
+            #adjust velocity based on keyboard presses:
+            if(keypressed == 'w'):
+                command.horizontal_velocity = np.array([0.1,0])
+            elif(keypressed == 's'):
+                command.horizontal_velocity = np.array([-0.1,0])
+            elif(keypressed == 'd'):
+                command.horizontal_velocity = np.array([0.1,0.1])
+            elif(keypressed == 'a'):
+                command.horizontal_velocity = np.array([-0.1,-0.1])
+            elif(keypressed == 'e'):
+                command.yaw_rate = 0.7
+            elif(keypressed == 'q'):
+                command.yaw_rate = -0.7
+            elif(keypressed == 'p'):
+                command.horizontal_velocity = np.array([0,0])
+                command.yaw_rate = 0.0
+            elif(keypressed == 'i'):
+                keypressed = 'p'
+                prevkey = 'p'
+                command.pitch += 0.1
+            elif(keypressed == 'k'):
+                keypressed = 'p'
+                prevkey = 'p'
+                command.pitch -= 0.1
+            elif(keypressed == 'r'):
+                command.horizontal_velocity = np.array([0,0])
+                command.yaw_rate = 0.0
+                command.pitch = 0.0
+                state.behavior_state = BehaviorState.DEACTIVATED
+                break
+            
+            controller.run(state, command, disp)
+            hardware_interface.set_actuator_postions(state.joint_angles)
+    finally:
+        curses.nocbreak()
+        screen.keypad(0)
+        curses.echo()
+        curses.endwin()
         
-        if(mode == '0'):
-            command.horizontal_velocity = np.array([0,0.1])
-        elif(mode == '1'):
-            command.horizontal_velocity = np.array([0.1,0])
-        
-        command.yaw_rate = data * 0.75		
-		
-        controller.run(state, command,disp)
-        hardware_interface.set_actuator_postions(state.joint_angles)		
-        
+
+
 main()
+print("Done")
