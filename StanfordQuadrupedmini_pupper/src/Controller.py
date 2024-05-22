@@ -57,9 +57,6 @@ class Controller:
             foot_location = state.foot_locations[:, leg_index]
             if contact_mode == 1:
                 new_location = self.stance_controller.next_foot_location(leg_index, state, command)
-                if (command.roll_step == True):
-                    print("goofy time")
-                    command.roll *= -1
             else:
                 swing_proportion = (
                     self.gait_controller.subphase_ticks(state.ticks) / self.config.swing_ticks
@@ -71,6 +68,12 @@ class Controller:
                     command
                 )
             new_foot_locations[:, leg_index] = new_location
+
+            #stupid hack to make the root giggle as it walks
+            if (command.roll_step == True and contact_modes[1] == 1):
+                    command.roll *= -1
+                    print(f"goofy time: {command.roll}")
+
         return new_foot_locations, contact_modes
 
 
