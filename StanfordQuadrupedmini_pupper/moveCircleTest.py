@@ -116,6 +116,8 @@ def main():
 
         circles = cv2.HoughCircles(mask_blurred, cv2.HOUGH_GRADIENT, dp=1, minDist=50, 
                                     param1=200, param2=30, minRadius=5, maxRadius=150) #min 10, max 100 default
+        
+
 
         now = time.time()
         if now - last_loop < config.dt:
@@ -129,7 +131,8 @@ def main():
             
         last_loop = time.time()
         
-        print(circles)
+        print("X of center: ", circles[0][0])
+        
 
         if circles is None:
             command.horizontal_velocity = np.array([0, 0])
