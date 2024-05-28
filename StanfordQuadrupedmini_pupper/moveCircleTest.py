@@ -67,14 +67,14 @@ def main():
     """Main program
     """
 
-    keypressed = ""
-    prevkey = ""
+    # keypressed = ""
+    # prevkey = ""
 
-    screen = curses.initscr()
-    curses.noecho()
-    curses.cbreak()
-    screen.keypad(True)
-    screen.nodelay(True)
+    # screen = curses.initscr()
+    # curses.noecho()
+    # curses.cbreak()
+    # screen.keypad(True)
+    # screen.nodelay(True)
     #screen.timeout(5)
     
     # Create config
@@ -99,49 +99,52 @@ def main():
     firstLoopFlag = True
     last_loop = time.time()
     
-    try:
-        while True:
-            # 0 is default, I changed to 1 to get the back camera of my surface
-            cap = cv2.VideoCapture(0)  # Initialize webcam (0 is usually the default webcam)
+    # 0 is default, I changed to 1 to get the back camera of my surface
+    cap = cv2.VideoCapture(0)  # Initialize webcam (0 is usually the default webcam)
 
-            # while True:
-            ret, frame = cap.read()  # Read a frame from the webcam
+    # try:
+    
+    while True:
+        
 
-            hsv = cv2.cvtColor(frame, cv2.COLOR_BGR2HSV)
-            mask = cv2.inRange(hsv, (5, 120, 50), (25, 255, 255))
-            mask_blurred = cv2.GaussianBlur(mask, (9,9),0)
+        # while True:
+        ret, frame = cap.read()  # Read a frame from the webcam
 
-            circles = cv2.HoughCircles(mask_blurred, cv2.HOUGH_GRADIENT, dp=1, minDist=50, 
-                                        param1=200, param2=30, minRadius=5, maxRadius=150) #min 10, max 100 default
+        hsv = cv2.cvtColor(frame, cv2.COLOR_BGR2HSV)
+        mask = cv2.inRange(hsv, (5, 120, 50), (25, 255, 255))
+        mask_blurred = cv2.GaussianBlur(mask, (9,9),0)
 
-            now = time.time()
-            if now - last_loop < config.dt:
-                continue
+        circles = cv2.HoughCircles(mask_blurred, cv2.HOUGH_GRADIENT, dp=1, minDist=50, 
+                                    param1=200, param2=30, minRadius=5, maxRadius=150) #min 10, max 100 default
 
-            if(firstLoopFlag):
-                firstLoopFlag = False
-                state.behavior_state = BehaviorState.REST
-            else:
-                state.behavior_state = BehaviorState.TROT
-                
-            last_loop = time.time()
-           
-            print(circles)
+        now = time.time()
+        if now - last_loop < config.dt:
+            continue
 
-            if circles is None:
-                command.horizontal_velocity = np.array([0, 0])
-                command.yaw_rate = 0.7
-            else:
-                command.yaw_rate = 0
-                command.horizontal_velocity = np.array([0.2, 0])
+        if(firstLoopFlag):
+            firstLoopFlag = False
+            state.behavior_state = BehaviorState.REST
+        else:
+            state.behavior_state = BehaviorState.TROT
             
-            controller.run(state, command, disp)
-            hardware_interface.set_actuator_postions(state.joint_angles)
-    finally:
-        curses.nocbreak()
-        screen.keypad(0)
-        curses.echo()
-        curses.endwin()
+        last_loop = time.time()
+        
+        print(circles)
+
+        if circles is None:
+            command.horizontal_velocity = np.array([0, 0])
+            command.yaw_rate = 0.7
+        else:
+            command.yaw_rate = 0
+            command.horizontal_velocity = np.array([0.2, 0])
+        
+        controller.run(state, command, disp)
+        hardware_interface.set_actuator_postions(state.joint_angles)
+    # finally:
+        # curses.nocbreak()
+        # screen.keypad(0)
+        # curses.echo()
+        # curses.endwin()
         
 
 if __name__ == "__main__":
