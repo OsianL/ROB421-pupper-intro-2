@@ -67,6 +67,7 @@ def main():
     """Main program
     """
     x_set_point = 320
+    x_kp_value = 1/x_set_point
 
     # Create config
     config = Configuration()
@@ -130,14 +131,14 @@ def main():
         print("x pos: ", x_pos)
         print("error: ", x_error)
             
-        
+        command.yaw_rate = x_kp_value * x_error
 
-        if circles is None:
-            command.horizontal_velocity = np.array([0, 0])
-            command.yaw_rate = 0.7
-        else:
-            command.yaw_rate = 0
-            command.horizontal_velocity = np.array([0.2, 0])
+        # if circles is None:
+        #     command.horizontal_velocity = np.array([0, 0])
+        #     command.yaw_rate = 0.7
+        # else:
+        #     command.yaw_rate = 0
+        #     command.horizontal_velocity = np.array([0.2, 0])
         
         controller.run(state, command, disp)
         hardware_interface.set_actuator_postions(state.joint_angles)        
