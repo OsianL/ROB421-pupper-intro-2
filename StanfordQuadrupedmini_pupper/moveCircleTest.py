@@ -90,6 +90,7 @@ def main():
     #Handle the first loop iteration
     firstLoopFlag = True
     last_loop = time.time()
+    now = time.time()
     
     # 0 is default, I changed to 1 to get the back camera of my surface
     cap = cv2.VideoCapture(0)  # Initialize webcam (0 is usually the default webcam)
@@ -97,7 +98,9 @@ def main():
     # try:
     
     while True:
-        
+        last_loop = now
+        now = time.time()
+        print("loop time: ", now-last_loop)
 
         # while True:
         ret, frame = cap.read()  # Read a frame from the webcam
@@ -116,7 +119,6 @@ def main():
 
         x_error = x_set_point - x_pos
 
-        now = time.time()
         if now - last_loop < config.dt:
             continue
 
@@ -125,13 +127,14 @@ def main():
             state.behavior_state = BehaviorState.REST
         else:
             state.behavior_state = BehaviorState.TROT
-            
-        last_loop = time.time()
-        
+                    
+        yaw_rate = x_kp_value * x_error
+
+        command.yaw_rate = yaw_rate
+
         print("x pos: ", x_pos)
         print("error: ", x_error)
-            
-        command.yaw_rate = x_kp_value * x_error
+        print("commanded yaw rate: ", yaw_rate)
 
         # if circles is None:
         #     command.horizontal_velocity = np.array([0, 0])
@@ -141,7 +144,7 @@ def main():
         #     command.horizontal_velocity = np.array([0.2, 0])
         
         controller.run(state, command, disp)
-        hardware_interface.set_actuator_postions(state.joint_angles)        
+        hardware_interface.set_actuator_postions(state.joint_angles)    
 
 if __name__ == "__main__":
     main()
