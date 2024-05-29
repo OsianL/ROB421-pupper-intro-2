@@ -51,14 +51,15 @@ def main():
     
 
     while True:
-        if now - last_loop < config.dt:
-            print("Skipping Time")
-            continue
-        else: 
+        #Handle the loop timing
+        if (now - last_loop) > config.dt:
             print("Not skipping Time")
             last_loop = now
-            now = time.time()
             #print("loop time: ", now-last_loop)
+        else: 
+            print("Skipping Time")
+            continue
+        now = time.time()
 
         if(firstLoopFlag):
             firstLoopFlag = False
