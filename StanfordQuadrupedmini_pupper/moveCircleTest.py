@@ -66,17 +66,9 @@ def main():
     
     """Main program
     """
+    x_set_point = 320
+    x_kp_value = 1/x_set_point
 
-    # keypressed = ""
-    # prevkey = ""
-
-    # screen = curses.initscr()
-    # curses.noecho()
-    # curses.cbreak()
-    # screen.keypad(True)
-    # screen.nodelay(True)
-    #screen.timeout(5)
-    
     # Create config
     config = Configuration()
     hardware_interface = HardwareInterface()
@@ -98,6 +90,7 @@ def main():
     #Handle the first loop iteration
     firstLoopFlag = True
     last_loop = time.time()
+    now = time.time()
     
     # 0 is default, I changed to 1 to get the back camera of my surface
     cap = cv2.VideoCapture(0)  # Initialize webcam (0 is usually the default webcam)
@@ -105,7 +98,9 @@ def main():
     # try:
     
     while True:
-        
+        last_loop = now
+        now = time.time()
+        # print("loop time: ", now-last_loop)
 
         # while True:
         ret, frame = cap.read()  # Read a frame from the webcam
@@ -116,36 +111,41 @@ def main():
 
         circles = cv2.HoughCircles(mask_blurred, cv2.HOUGH_GRADIENT, dp=1, minDist=50, 
                                     param1=200, param2=30, minRadius=5, maxRadius=150) #min 10, max 100 default
+        
+        if circles is not None:
+            x_pos = circles[0][0][0]
+        else: 
+            x_pos = 0
 
-        now = time.time()
+        x_error = x_set_point - x_pos
+
         if now - last_loop < config.dt:
             continue
 
         if(firstLoopFlag):
             firstLoopFlag = False
             state.behavior_state = BehaviorState.REST
+            command.height = -0.05
         else:
             state.behavior_state = BehaviorState.TROT
-            
-        last_loop = time.time()
-        
-        print(circles)
+                    
+        yaw_rate = x_kp_value * x_error
 
-        if circles is None:
-            command.horizontal_velocity = np.array([0, 0])
-            command.yaw_rate = 0.7
-        else:
-            command.yaw_rate = 0
-            command.horizontal_velocity = np.array([0.2, 0])
+        command.yaw_rate = yaw_rate
+
+        # print("x pos: ", x_pos)
+        # print("error: ", x_error)
+        # print("commanded yaw rate: ", yaw_rate)
+
+        # if circles is None:
+        #     command.horizontal_velocity = np.array([0, 0])
+        #     command.yaw_rate = 0.7
+        # else:
+        #     command.yaw_rate = 0
+        #     command.horizontal_velocity = np.array([0.2, 0])
         
         controller.run(state, command, disp)
-        hardware_interface.set_actuator_postions(state.joint_angles)
-    # finally:
-        # curses.nocbreak()
-        # screen.keypad(0)
-        # curses.echo()
-        # curses.endwin()
-        
+        hardware_interface.set_actuator_postions(state.joint_angles)    
 
 if __name__ == "__main__":
     main()
