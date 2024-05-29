@@ -45,6 +45,8 @@ def main():
 
     captured_last_loop = False
 
+    
+
     while True:
         last_loop = now
         now = time.time()
@@ -83,6 +85,7 @@ def main():
         if(firstLoopFlag):
             firstLoopFlag = False
             state.behavior_state = BehaviorState.REST
+            command.height = -0.05
         else:
             state.behavior_state = BehaviorState.TROT
                     
