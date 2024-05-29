@@ -84,6 +84,7 @@ def main():
 
     #Handle the first loop iteration
     last_loop = time.time()
+    now = time.time()
     
     try:
         while True:
