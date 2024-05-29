@@ -51,9 +51,14 @@ def main():
     
 
     while True:
-        last_loop = now
-        now = time.time()
-        #print("loop time: ", now-last_loop)
+        if now - last_loop < config.dt:
+            print("Skipping Time")
+            continue
+        else: 
+            print("Not skipping Time")
+            last_loop = now
+            now = time.time()
+            #print("loop time: ", now-last_loop)
 
         if(firstLoopFlag):
             firstLoopFlag = False
@@ -62,11 +67,6 @@ def main():
             print("First Loop Passed")
         else:
             state.behavior_state = BehaviorState.TROT
-
-        if now - last_loop < config.dt:
-            print("Skipping Time")
-            continue
-        else: print("Not skipping Time")
 
         if (now - camera_last_frame) > camera_dt:
             ret, frame = cap.read()  # Read a frame from the webcam
