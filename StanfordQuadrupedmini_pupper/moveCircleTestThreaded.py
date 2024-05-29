@@ -65,7 +65,7 @@ def main():
         if(firstLoopFlag):
             firstLoopFlag = False
             state.behavior_state = BehaviorState.REST
-            command.height = -0.05
+            command.height = -0.035
             print("First Loop Passed")
         else:
             state.behavior_state = BehaviorState.TROT
