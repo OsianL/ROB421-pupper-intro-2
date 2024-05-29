@@ -89,7 +89,8 @@ def main():
         while True:
             last_loop = now
             now = time.time()
-            print("loop time: ", now-last_loop)
+            # print("loop time: ", now-last_loop)
+            screen.addstr(str(now-last_loop))
             if now - last_loop < config.dt:
                 continue
             # last_loop = time.time()
