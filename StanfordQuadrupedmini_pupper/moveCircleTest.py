@@ -125,6 +125,7 @@ def main():
         if(firstLoopFlag):
             firstLoopFlag = False
             state.behavior_state = BehaviorState.REST
+            command.height = -0.05
         else:
             state.behavior_state = BehaviorState.TROT
                     
