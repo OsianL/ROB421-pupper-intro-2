@@ -91,7 +91,8 @@ def main():
             last_loop = now
             now = time.time()
             # print("loop time: ", now-last_loop)
-            screen.addstr(str(now-last_loop))
+            loop_time = now-last_loop
+            screen.addstr(str(loop_time))
             if now - last_loop < config.dt:
                 continue
             # last_loop = time.time()
