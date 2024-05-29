@@ -58,6 +58,7 @@ def main():
             #print("loop time: ", now-last_loop)
         else: 
             print("Skipping Time")
+            now = time.time()
             continue
         now = time.time()
 
