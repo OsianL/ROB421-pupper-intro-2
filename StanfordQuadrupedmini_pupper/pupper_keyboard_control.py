@@ -87,10 +87,12 @@ def main():
     
     try:
         while True:
+            last_loop = now
             now = time.time()
+            print("loop time: ", now-last_loop)
             if now - last_loop < config.dt:
                 continue
-            last_loop = time.time()
+            # last_loop = time.time()
            
             try:
                 prevkey = keypressed

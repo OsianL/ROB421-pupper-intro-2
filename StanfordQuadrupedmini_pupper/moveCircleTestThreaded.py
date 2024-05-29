@@ -50,7 +50,7 @@ def main():
     while True:
         last_loop = now
         now = time.time()
-        print("loop time: ", now-last_loop)
+        #print("loop time: ", now-last_loop)
 
         if captured_last_loop == False:
             ret, frame = cap.read()  # Read a frame from the webcam
