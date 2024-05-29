@@ -100,7 +100,7 @@ def main():
     while True:
         last_loop = now
         now = time.time()
-        print("loop time: ", now-last_loop)
+        # print("loop time: ", now-last_loop)
 
         # while True:
         ret, frame = cap.read()  # Read a frame from the webcam
@@ -132,9 +132,9 @@ def main():
 
         command.yaw_rate = yaw_rate
 
-        print("x pos: ", x_pos)
-        print("error: ", x_error)
-        print("commanded yaw rate: ", yaw_rate)
+        # print("x pos: ", x_pos)
+        # print("error: ", x_error)
+        # print("commanded yaw rate: ", yaw_rate)
 
         # if circles is None:
         #     command.horizontal_velocity = np.array([0, 0])
