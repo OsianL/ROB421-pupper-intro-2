@@ -17,6 +17,9 @@ def main():
     x_set_point = 320
     x_kp_value = 1/x_set_point
 
+    camera_dt = 0.100
+    camera_last_frame = time.time()
+
     # Create config
     config = Configuration()
     hardware_interface = HardwareInterface()
@@ -37,8 +40,8 @@ def main():
 
     #Handle the first loop iteration
     firstLoopFlag = True
-    last_loop = time.time()
-    now = time.time()
+    last_loop = 0 
+    now = time.time() - config.dt
     
     # 0 is default, I changed to 1 to get the back camera of my surface
     cap = cv2.VideoCapture(0)  # Initialize webcam (0 is usually the default webcam)
@@ -52,7 +55,7 @@ def main():
         now = time.time()
         #print("loop time: ", now-last_loop)
 
-        if captured_last_loop == False:
+        if (now - camera_last_frame) > camera_dt:
             ret, frame = cap.read()  # Read a frame from the webcam
 
             hsv = cv2.cvtColor(frame, cv2.COLOR_BGR2HSV)
@@ -61,7 +64,8 @@ def main():
 
             circles = cv2.HoughCircles(mask_blurred, cv2.HOUGH_GRADIENT, dp=1, minDist=50, 
                                         param1=200, param2=30, minRadius=5, maxRadius=150) #min 10, max 100 default
-        captured_last_loop = not captured_last_loop        
+            camera_last_frame = now
+        # captured_last_loop = not captured_last_loop        
 
         # ret, frame = cap.read()  # Read a frame from the webcam
 
