@@ -53,7 +53,7 @@ while True:
     # Detect blobs
     keypoints = detector.detect(mask_blurred)
 
-    print(cv2.KeyPoint_convert(keypoints), keypoints.size)
+    print(cv2.KeyPoint_convert(keypoints))
     
     # Draw detected blobs as red circles.
     # cv2.DRAW_MATCHES_FLAGS_DRAW_RICH_KEYPOINTS ensures the size of the circle corresponds to the size of the blob
