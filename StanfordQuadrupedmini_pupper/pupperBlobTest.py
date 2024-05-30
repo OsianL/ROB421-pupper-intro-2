@@ -89,11 +89,10 @@ def main():
         
         # Detect blobs
         keypoints = detector.detect(mask_blurred)
-
-        print(cv2.KeyPoint_convert(keypoints))
         
         if len(keypoints) > 0:
             x_pos = cv2.KeyPoint_convert(keypoints)[0]
+            print(cv2.KeyPoint_convert(keypoints))
         else: 
             x_pos = 0
 
@@ -110,6 +109,8 @@ def main():
             state.behavior_state = BehaviorState.TROT
                     
         yaw_rate = x_kp_value * x_error
+        
+        print("passed Yaw rate: ", yaw_rate)
 
         command.yaw_rate = yaw_rate
         
