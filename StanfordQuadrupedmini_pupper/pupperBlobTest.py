@@ -92,7 +92,7 @@ def main():
 
         print(cv2.KeyPoint_convert(keypoints))
         
-        if keypoints is not None:
+        if len(keypoints) > 0:
             x_pos = cv2.KeyPoint_convert(keypoints)[0]
         else: 
             x_pos = 0

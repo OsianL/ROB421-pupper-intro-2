@@ -36,7 +36,7 @@ while True:
     #loop time
     last_loop = now
     now = time.time()
-    print("blob loop time: ", now - last_loop)
+    # print("blob loop time: ", now - last_loop)
 
     # Capture frame-by-frame
     ret, frame = cap.read()
@@ -53,7 +53,12 @@ while True:
     # Detect blobs
     keypoints = detector.detect(mask_blurred)
 
-    print(cv2.KeyPoint_convert(keypoints))
+    if len(keypoints) > 0:
+        print("size of keypoints: ", len(keypoints))
+        print(keypoints)
+        print(cv2.KeyPoint_convert(keypoints))
+
+    
     
     # Draw detected blobs as red circles.
     # cv2.DRAW_MATCHES_FLAGS_DRAW_RICH_KEYPOINTS ensures the size of the circle corresponds to the size of the blob
