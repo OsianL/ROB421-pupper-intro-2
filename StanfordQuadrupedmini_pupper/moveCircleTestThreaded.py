@@ -15,7 +15,7 @@ def main():
     """Main program
     """
     x_set_point = 320
-    x_kp_value = 1/x_set_point
+    x_kp_value = 0.25/x_set_point
 
     camera_dt = 0.100
     camera_last_frame = time.time()
@@ -65,7 +65,7 @@ def main():
         if(firstLoopFlag):
             firstLoopFlag = False
             state.behavior_state = BehaviorState.REST
-            command.height = -0.035
+            command.height = -0.04
             print("First Loop Passed")
         else:
             state.behavior_state = BehaviorState.TROT
