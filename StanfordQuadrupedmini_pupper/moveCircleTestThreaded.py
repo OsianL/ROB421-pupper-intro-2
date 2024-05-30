@@ -51,9 +51,24 @@ def main():
     
 
     while True:
-        last_loop = now
+        #Handle the loop timing
+        if (now - last_loop) > config.dt:
+            print("Not skipping Time")
+            last_loop = now
+            #print("loop time: ", now-last_loop)
+        else: 
+            print("Skipping Time")
+            now = time.time()
+            continue
         now = time.time()
-        #print("loop time: ", now-last_loop)
+
+        if(firstLoopFlag):
+            firstLoopFlag = False
+            state.behavior_state = BehaviorState.REST
+            command.height = -0.035
+            print("First Loop Passed")
+        else:
+            state.behavior_state = BehaviorState.TROT
 
         if (now - camera_last_frame) > camera_dt:
             ret, frame = cap.read()  # Read a frame from the webcam
@@ -64,6 +79,7 @@ def main():
 
             circles = cv2.HoughCircles(mask_blurred, cv2.HOUGH_GRADIENT, dp=1, minDist=50, 
                                         param1=200, param2=30, minRadius=5, maxRadius=150) #min 10, max 100 default
+            print("Reading Camera")
             camera_last_frame = now
         # captured_last_loop = not captured_last_loop        
 
@@ -82,16 +98,6 @@ def main():
             x_pos = 0
 
         x_error = x_set_point - x_pos
-
-        if now - last_loop < config.dt:
-            continue
-
-        if(firstLoopFlag):
-            firstLoopFlag = False
-            state.behavior_state = BehaviorState.REST
-            command.height = -0.05
-        else:
-            state.behavior_state = BehaviorState.TROT
                     
         yaw_rate = x_kp_value * x_error
 
