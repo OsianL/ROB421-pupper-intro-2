@@ -91,7 +91,7 @@ def main():
         keypoints = detector.detect(mask_blurred)
         
         if len(keypoints) > 0:
-            x_pos = cv2.KeyPoint_convert(keypoints)[0]
+            x_pos = cv2.KeyPoint_convert(keypoints)[0][0]
             print(cv2.KeyPoint_convert(keypoints))
         else: 
             x_pos = 0
