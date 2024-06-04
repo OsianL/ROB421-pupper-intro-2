@@ -18,7 +18,7 @@ def main():
 
     #Setup P loop variables
     x_set_point = 320
-    x_kp_value = 1/x_set_point
+    x_kp_value = 0.25/x_set_point
     x_pos = 0
 
     #*************************************************************
@@ -83,7 +83,7 @@ def main():
     now = time.time()
 
     #Loop timing
-    vision_loop_time = 1.5
+    vision_loop_time = 0.75
     last_loop = 0
     last_vision_loop = 0
     now = time.time()
@@ -105,7 +105,7 @@ def main():
         
             #Have the robot come to rest
             state.behavior_state = BehaviorState.REST
-            time.sleep(0.2)
+            time.sleep(0.1)
 
             # Capture frame-by-frame
             ret, frame = cap.read()
