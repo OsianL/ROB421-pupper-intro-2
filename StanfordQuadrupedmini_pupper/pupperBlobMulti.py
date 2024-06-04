@@ -12,6 +12,7 @@ from pupper.Kinematics import four_legs_inverse_kinematics
 from MangDang.mini_pupper.display import Display
 
 def image_process(cap, detector):
+    print("processing image")
     x_set_point = 320
     x_kp_value = 1/x_set_point
 
@@ -40,6 +41,7 @@ def image_process(cap, detector):
     return yaw_rate
 
 def move_robot(command, controller, state, disp, hardware_interface, yaw_rate):
+    print("moving")
     command.yaw_rate = yaw_rate
     
     controller.run(state, command, disp)
@@ -101,4 +103,4 @@ if __name__ == "__main__":
 
     with concurrent.futures.ProcessPoolExecutor() as executor:
         yaw_rate = executor.submit(image_process, cap, detector)
-        move = executor.sumit(move_robot, command, controller, state, disp, hardware_interface, yaw_rate.result())
+        move = executor.submit(move_robot, command, controller, state, disp, hardware_interface, yaw_rate.result())
