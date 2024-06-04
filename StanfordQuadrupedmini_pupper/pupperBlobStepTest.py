@@ -83,7 +83,7 @@ def main():
     now = time.time()
 
     #Loop timing
-    vision_loop_time = 0.75
+    vision_loop_time = 0.85
     last_loop = 0
     last_vision_loop = 0
     now = time.time()
@@ -105,7 +105,7 @@ def main():
         
             #Have the robot come to rest
             state.behavior_state = BehaviorState.REST
-            time.sleep(0.1)
+            time.sleep(0.25)
 
             # Capture frame-by-frame
             ret, frame = cap.read()
