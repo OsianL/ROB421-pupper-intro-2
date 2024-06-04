@@ -117,6 +117,7 @@ if __name__ == "__main__":
             else:
                 print("executing move")
                 move = executor.submit(move_robot, command, controller, state, disp, hardware_interface, yaw_rate.result())
+                print("move executed")
             #Captures image and calculates new yaw rate
             yaw_rate = executor.submit(image_process)
 
