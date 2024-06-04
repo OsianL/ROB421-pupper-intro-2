@@ -105,4 +105,8 @@ if __name__ == "__main__":
         with concurrent.futures.ProcessPoolExecutor() as executor:
             yaw_rate = executor.submit(image_process)
             print("yaw rate: ", yaw_rate.result())
-            move = executor.submit(move_robot, command, controller, state, disp, hardware_interface, yaw_rate.result())
+            # move = executor.submit(move_robot, command, controller, state, disp, hardware_interface, yaw_rate.result())
+            command.yaw_rate = yaw_rate.result()
+    
+            controller.run(state, command, disp)
+            hardware_interface.set_actuator_postions(state.joint_angles) 
