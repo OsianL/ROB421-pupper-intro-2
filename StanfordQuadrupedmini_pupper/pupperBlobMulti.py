@@ -1,4 +1,5 @@
 import concurrent.futures
+import multiprocessing
 import cv2
 # import curses
 import numpy as np
@@ -66,12 +67,13 @@ def image_process():
 
     return yaw_rate
 
-def move_robot(command, controller, state, disp, hardware_interface, yaw_rate):
+def move_robot(command, controller, state, disp, hardware_interface, yaw_rate, imaging_complete):
     print("moving")
-    command.yaw_rate = yaw_rate
-    
-    controller.run(state, command, disp)
-    hardware_interface.set_actuator_postions(state.joint_angles)  
+    while not imaging_complete.is_set():
+        command.yaw_rate = yaw_rate
+        
+        controller.run(state, command, disp)
+        hardware_interface.set_actuator_postions(state.joint_angles)  
 
 if __name__ == "__main__":
     # Create config
@@ -100,9 +102,16 @@ if __name__ == "__main__":
     #Loop timing
     last_loop = 0
     now = time.time()
+    yaw_rate = 1
 
     while True:
-        with concurrent.futures.ThreadPoolExecutor() as executor:
-            yaw_rate = executor.submit(image_process)
-            print("yaw rate: ", yaw_rate.result())
+        with concurrent.futures.ProcessPoolExecutor() as executor:
+            #Event stops running move when new image is done processing
+            imaging_complete = multiprocessing.Event()
+            #Moves continuously based on previous yaw command until new one is done
             move = executor.submit(move_robot, command, controller, state, disp, hardware_interface, yaw_rate.result())
+            #Captures image and calculates new yaw rate
+            yaw_rate = executor.submit(image_process)
+            imaging_complete.set()
+            print("yaw rate: ", yaw_rate.result())
+            
