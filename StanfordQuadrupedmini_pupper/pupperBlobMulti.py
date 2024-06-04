@@ -102,14 +102,19 @@ if __name__ == "__main__":
     #Loop timing
     last_loop = 0
     now = time.time()
-    yaw_rate = 1
+
+    first_process = True
 
     while True:
         with concurrent.futures.ProcessPoolExecutor() as executor:
             #Event stops running move when new image is done processing
             imaging_complete = multiprocessing.Event()
             #Moves continuously based on previous yaw command until new one is done
-            move = executor.submit(move_robot, command, controller, state, disp, hardware_interface, yaw_rate.result())
+            if first_process is True:
+                move = executor.submit(move_robot, command, controller, state, disp, hardware_interface, 0)
+                first_process = False
+            else:
+                move = executor.submit(move_robot, command, controller, state, disp, hardware_interface, yaw_rate.result())
             #Captures image and calculates new yaw rate
             yaw_rate = executor.submit(image_process)
             imaging_complete.set()
