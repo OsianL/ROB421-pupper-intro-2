@@ -12,7 +12,7 @@ from MangDang.mini_pupper.Config import Configuration
 from pupper.Kinematics import four_legs_inverse_kinematics
 from MangDang.mini_pupper.display import Display
 
-def image_process():
+def image_process(imaging_complete):
     print("processing image")
     # Initialize the webcam (0 is the default camera)
     cap = cv2.VideoCapture(0)
@@ -65,6 +65,8 @@ def image_process():
 
     yaw_rate = x_kp_value * x_error
 
+    imaging_complete.set()
+
     return yaw_rate
 
 def move_robot(command, controller, state, disp, hardware_interface, yaw_rate, imaging_complete):
@@ -111,12 +113,14 @@ if __name__ == "__main__":
             imaging_complete = multiprocessing.Event()
             #Moves continuously based on previous yaw command until new one is done
             if first_process is True:
+                print("first move")
                 move = executor.submit(move_robot, command, controller, state, disp, hardware_interface, 0)
                 first_process = False
             else:
+                print("executing move")
                 move = executor.submit(move_robot, command, controller, state, disp, hardware_interface, yaw_rate.result())
             #Captures image and calculates new yaw rate
-            yaw_rate = executor.submit(image_process)
-            imaging_complete.set()
+            yaw_rate = executor.submit(image_process, imaging_complete)
+            # imaging_complete.set()
             print("yaw rate: ", yaw_rate.result())
             
