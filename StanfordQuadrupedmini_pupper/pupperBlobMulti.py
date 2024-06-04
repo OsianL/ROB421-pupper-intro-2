@@ -11,8 +11,34 @@ from MangDang.mini_pupper.Config import Configuration
 from pupper.Kinematics import four_legs_inverse_kinematics
 from MangDang.mini_pupper.display import Display
 
-def image_process(cap, detector):
+def image_process():
     print("processing image")
+    # Initialize the webcam (0 is the default camera)
+    cap = cv2.VideoCapture(0)
+
+    # Set up SimpleBlobDetector parameters.
+    params = cv2.SimpleBlobDetector_Params()
+
+    # Adjust the parameters to detect blobs as needed
+    params.filterByColor = True
+    params.blobColor = 255  # Detect white blobs (0 for black blobs)
+
+    params.filterByArea = True
+    params.minArea = 500
+    params.maxArea = 20000
+
+    params.filterByCircularity = True
+    params.minCircularity = 0.1
+
+    params.filterByConvexity = True
+    params.minConvexity = 0.87
+
+    params.filterByInertia = True
+    params.minInertiaRatio = 0.01
+
+    # Create a detector with the parameters
+    detector = cv2.SimpleBlobDetector_create(params)
+
     x_set_point = 320
     x_kp_value = 1/x_set_point
 
@@ -70,37 +96,11 @@ if __name__ == "__main__":
     firstLoopFlag = True
     last_loop = time.time()
     now = time.time()
-    
-    # Initialize the webcam (0 is the default camera)
-    cap = cv2.VideoCapture(0)
-
-    # Set up SimpleBlobDetector parameters.
-    params = cv2.SimpleBlobDetector_Params()
-
-    # Adjust the parameters to detect blobs as needed
-    params.filterByColor = True
-    params.blobColor = 255  # Detect white blobs (0 for black blobs)
-
-    params.filterByArea = True
-    params.minArea = 500
-    params.maxArea = 20000
-
-    params.filterByCircularity = True
-    params.minCircularity = 0.1
-
-    params.filterByConvexity = True
-    params.minConvexity = 0.87
-
-    params.filterByInertia = True
-    params.minInertiaRatio = 0.01
-
-    # Create a detector with the parameters
-    detector = cv2.SimpleBlobDetector_create(params)
 
     #Loop timing
     last_loop = 0
     now = time.time()
 
     with concurrent.futures.ProcessPoolExecutor() as executor:
-        yaw_rate = executor.submit(image_process, cap, detector)
+        yaw_rate = executor.submit(image_process)
         move = executor.submit(move_robot, command, controller, state, disp, hardware_interface, yaw_rate.result())
