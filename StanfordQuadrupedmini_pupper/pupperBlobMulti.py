@@ -101,6 +101,7 @@ if __name__ == "__main__":
     last_loop = 0
     now = time.time()
 
-    with concurrent.futures.ProcessPoolExecutor() as executor:
-        yaw_rate = executor.submit(image_process)
-        move = executor.submit(move_robot, command, controller, state, disp, hardware_interface, yaw_rate.result())
+    while True:
+        with concurrent.futures.ProcessPoolExecutor() as executor:
+            yaw_rate = executor.submit(image_process)
+            move = executor.submit(move_robot, command, controller, state, disp, hardware_interface, yaw_rate.result())
