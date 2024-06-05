@@ -73,6 +73,11 @@ def main():
     # Create a detector with the parameters
     detector = cv2.SimpleBlobDetector_create(params)
 
+    #Flags for whether or not the ball has been found
+    Detection = False
+    firstDetectionFlag = False
+    loopsSinceDetection = 0
+
     #********************************************************
     # Start of Main Loop
     #********************************************************
@@ -119,17 +124,26 @@ def main():
             # Detect blobs
             keypoints = detector.detect(mask_blurred)
         
-            #Get the position of the first (if any) blobs detected 
+            #Get the position of the first (if any) blobs detected
+            #if Not detected, set x_pos = 0 and set some detection flags.
             if len(keypoints) > 0:
                 x_pos = cv2.KeyPoint_convert(keypoints)[0][0]
                 print(cv2.KeyPoint_convert(keypoints))
+                firstDetectionFlag = True
+                Detection = True
+                loopsSinceDetection = 0
             else: 
                 x_pos = 0
+                Detection = False
+                loopsSinceDetection += 1
 
             #Set the last vision looptime equal to zero
             last_vision_loop = 0
 
         else:
+
+            if (firstDetectionFlag and not Detection) and (loopsSinceDetection < 5):
+                continue
 
             #Have the robot enter trot mode
             state.behavior_state = BehaviorState.TROT
@@ -147,8 +161,6 @@ def main():
             hardware_interface.set_actuator_postions(state.joint_angles)
 
 
-                    
-            
 
 if __name__ == "__main__":
     main()
