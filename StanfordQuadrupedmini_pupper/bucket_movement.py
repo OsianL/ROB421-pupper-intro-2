@@ -38,6 +38,7 @@ def move_servo13(what_degree):
 
     # Servo J13 = pwm3
     os.system("echo " + str(degree_finder) + " > /sys/class/pwm/pwmchip0/pwm3/duty_cycle")
+    print(degree_finder)
     # time.sleep(1)
     # os.system("echo 2500000 > /sys/class/pwm/pwmchip0/pwm3/duty_cycle")
     # time.sleep(1)
