@@ -112,10 +112,12 @@ if __name__ == "__main__":
             #Moves continuously based on previous yaw command until new one is done
             if first_process is True:
                 print("first move")
+                print("imaging complete event: ", imaging_complete)
                 move = executor.submit(move_robot, command, controller, state, disp, hardware_interface, 0)
                 first_process = False
             else:
                 print("executing move")
+                print("imaging complete event: ", imaging_complete)
                 move = executor.submit(move_robot, command, controller, state, disp, hardware_interface, yaw_rate.result())
                 print("move executed")
             #Captures image and calculates new yaw rate
