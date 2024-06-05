@@ -75,19 +75,22 @@ if __name__ == "__main__":
     command = Command()
 
     imaging_complete = multiprocessing.Event()
+    yaw_rate = 0
 
     with concurrent.futures.ProcessPoolExecutor(max_workers=2) as executor:
         first_loop = True
         while True:
             print("Starting main loop iteration")
 
-            if first_loop:
-                print("Starting initial robot move process")
-                move_future = executor.submit(move_robot, command, controller, state, disp, hardware_interface, 0, imaging_complete)
-                first_loop = False
-            else:
-                print("Starting subsequent robot move process")
-                move_future = executor.submit(move_robot, command, controller, state, disp, hardware_interface, yaw_rate, imaging_complete)
+            # if first_loop:
+            #     print("Starting initial robot move process")
+            #     move_future = executor.submit(move_robot, command, controller, state, disp, hardware_interface, 0, imaging_complete)
+            #     first_loop = False
+            # else:
+            #     print("Starting subsequent robot move process")
+            #     move_future = executor.submit(move_robot, command, controller, state, disp, hardware_interface, yaw_rate, imaging_complete)
+            move_future = executor.submit(move_robot, command, controller, state, disp, hardware_interface, yaw_rate, imaging_complete)
+
 
             print("Submitting image processing task")
             yaw_rate_future = executor.submit(image_process)
