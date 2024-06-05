@@ -19,11 +19,11 @@ def main():
     #Setup P loop variables
     x_set_point = 320
     x_kp_value = 0.25/x_set_point
-    x_pos = 0
+    x_pos = 320
 
     y_set_point = 240
     y_kp_value = 0.25/y_set_point
-    y_pos = 0
+    y_pos = 240
 
     #*************************************************************
     # Movement Boilerplate
