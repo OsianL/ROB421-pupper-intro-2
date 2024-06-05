@@ -191,6 +191,7 @@ def main():
     #Walk forward for 5 seconds
     state.behavior_state = BehaviorState.TROT
     command.horizontal_velocity = np.array([0.05,0])
+    command.yaw_rate = 0.0
 
     walk_forward_time = 5
     start_time = time.time()
