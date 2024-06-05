@@ -74,34 +74,37 @@ if __name__ == "__main__":
     state.quat_orientation = np.array([1,0,0,0])
     command = Command()
 
-    imaging_complete = multiprocessing.Event()
+    # imaging_complete = multiprocessing.Event()
     yaw_rate = 0
 
-    with concurrent.futures.ProcessPoolExecutor(max_workers=2) as executor:
-        first_loop = True
-        while True:
-            print("Starting main loop iteration")
+    with multiprocessing.Manager() as manager:
+        imaging_complete = manager.Event()
 
-            # if first_loop:
-            #     print("Starting initial robot move process")
-            #     move_future = executor.submit(move_robot, command, controller, state, disp, hardware_interface, 0, imaging_complete)
-            #     first_loop = False
-            # else:
-            #     print("Starting subsequent robot move process")
-            #     move_future = executor.submit(move_robot, command, controller, state, disp, hardware_interface, yaw_rate, imaging_complete)
-            move_future = executor.submit(move_robot, command, controller, state, disp, hardware_interface, yaw_rate, imaging_complete)
+        with concurrent.futures.ProcessPoolExecutor(max_workers=2) as executor:
+            first_loop = True
+            while True:
+                print("Starting main loop iteration")
+
+                # if first_loop:
+                #     print("Starting initial robot move process")
+                #     move_future = executor.submit(move_robot, command, controller, state, disp, hardware_interface, 0, imaging_complete)
+                #     first_loop = False
+                # else:
+                #     print("Starting subsequent robot move process")
+                #     move_future = executor.submit(move_robot, command, controller, state, disp, hardware_interface, yaw_rate, imaging_complete)
+                move_future = executor.submit(move_robot, command, controller, state, disp, hardware_interface, yaw_rate, imaging_complete)
 
 
-            print("Submitting image processing task")
-            yaw_rate_future = executor.submit(image_process)
-            yaw_rate = yaw_rate_future.result()  # Wait for the image processing to complete
-            print("Yaw rate calculated:", yaw_rate)
+                print("Submitting image processing task")
+                yaw_rate_future = executor.submit(image_process)
+                yaw_rate = yaw_rate_future.result()  # Wait for the image processing to complete
+                print("Yaw rate calculated:", yaw_rate)
 
-            imaging_complete.set()  # Signal the move process to stop
+                imaging_complete.set()  # Signal the move process to stop
 
-            # Wait for the move process to acknowledge the stop signal
-            move_future.result()
+                # Wait for the move process to acknowledge the stop signal
+                move_future.result()
 
-            imaging_complete.clear()  # Reset the event for the next iteration
+                imaging_complete.clear()  # Reset the event for the next iteration
 
-            print("Main loop iteration completed")
+                print("Main loop iteration completed")
