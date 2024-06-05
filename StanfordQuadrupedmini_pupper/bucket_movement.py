@@ -28,9 +28,9 @@ pwm_per_degree_first_half = total_pwm_change_first_half/mid_degrees
 pwm_per_degree_second_half = total_pwm_change_second_half/total_degrees
 
 
-def move_servo13():
+def move_servo13(what_degree):
     global zero
-    what_degree = 150 # Changed to 150
+    # what_degree = 150 # Changed to 150
     if what_degree <= 90:
         degree_finder = zero + (pwm_per_degree_first_half * what_degree)
     else:
@@ -47,7 +47,9 @@ def move_servo13():
 
 def main():
     os.system("sudo systemctl stop robot")
-    move_servo13()
+    move_servo13(150)
+    time.sleep(1)
+    move_servo13(0)
 
 if __name__ == "__main__":
     main()
