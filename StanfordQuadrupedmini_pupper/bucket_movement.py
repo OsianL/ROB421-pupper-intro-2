@@ -42,7 +42,7 @@ def move_servo13(what_degree):
     time.sleep(1)
     os.system("echo 2500000 > /sys/class/pwm/pwmchip0/pwm3/duty_cycle")
     time.sleep(1)
-    os.system("echo 700000 > /sys/class/pwm/pwmchip0/pwm3/duty_cycle")
+    os.system("echo 500000 > /sys/class/pwm/pwmchip0/pwm3/duty_cycle")
     time.sleep(0.1)
     os.system("echo 00000 > /sys/class/pwm/pwmchip0/pwm3/duty_cycle")
 
