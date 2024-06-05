@@ -21,6 +21,10 @@ def main():
     x_kp_value = 0.25/x_set_point
     x_pos = 0
 
+    y_set_point = 240
+    y_kp_value = 0.25/y_set_point
+    y_pos = 0
+
     #*************************************************************
     # Movement Boilerplate
     #*************************************************************
@@ -88,7 +92,7 @@ def main():
     now = time.time()
 
     #Loop timing
-    vision_loop_time = 0.85
+    vision_loop_time = 0.5
     last_loop = 0
     last_vision_loop = 0
     now = time.time()
@@ -128,12 +132,15 @@ def main():
             #if Not detected, set x_pos = 0 and set some detection flags.
             if len(keypoints) > 0:
                 x_pos = cv2.KeyPoint_convert(keypoints)[0][0]
+                y_pos = cv2.KeyPoint_convert(keypoints)[0][1]
                 print(cv2.KeyPoint_convert(keypoints))
+
                 firstDetectionFlag = True
                 Detection = True
                 loopsSinceDetection = 0
             else: 
                 x_pos = 0
+                y_pos = 240
                 Detection = False
                 loopsSinceDetection += 1
 
@@ -142,7 +149,7 @@ def main():
 
         else:
 
-            if (firstDetectionFlag and not Detection) and (loopsSinceDetection < 5):
+            if (firstDetectionFlag and not Detection) and (loopsSinceDetection < 3):
                 continue
 
             #Have the robot enter trot mode
@@ -151,11 +158,17 @@ def main():
             #Calculate the yaw rate as a p controller
             x_error = x_set_point - x_pos
             yaw_rate = x_kp_value * x_error
-        
-            print("passed Yaw rate: ", yaw_rate)
 
+            print("passed Yaw rate: ", yaw_rate)
             command.yaw_rate = yaw_rate
         
+            #Calculate the forward velocity as a p controller
+            y_error = y_set_point - y_pos
+            forward_velo = y_kp_value * y_error
+
+            print("passed forward_velo: ", forward_velo)
+            command.horizontal_velocity = np.array([forward_velo,0])
+
             #Output these values to the robot
             controller.run(state, command, disp)
             hardware_interface.set_actuator_postions(state.joint_angles)
