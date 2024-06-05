@@ -18,6 +18,10 @@ def main():
     """Main program
     """
 
+    #Open the claw
+    os.system("echo 2500000 > /sys/class/pwm/pwmchip0/pwm3/duty_cycle")
+    time.sleep(2)
+
     #Setup P loop variables
     x_set_point = 320
     x_kp_value = 0.15/x_set_point
@@ -168,7 +172,7 @@ def main():
             forward_velo = y_kp_value * y_error
 
             #Check if both the x and y errors are within tolerance
-            if (x_error < 0.08) and (y_error < 0.08):
+            if firstDetectionFlag and (x_error < 0.08) and (y_error < 0.08):
                 break
 
             #Set the yaw and forward rates acording to the p loop
@@ -183,14 +187,11 @@ def main():
             hardware_interface.set_actuator_postions(state.joint_angles)
 
     #Once Out of the main while loop, move forward and grab the ball:
-    #Open the claw
-    #os.system("echo 2500000 > /sys/class/pwm/pwmchip0/pwm3/duty_cycle")
-    #time.sleep(2)
 
     #Walk forward for 5 seconds
     state.behavior_state = BehaviorState.TROT
     command.horizontal_velocity = np.array([0.15,0])
-    
+
     walk_forward_time = 5
     start_time = time.time()
     while True:
