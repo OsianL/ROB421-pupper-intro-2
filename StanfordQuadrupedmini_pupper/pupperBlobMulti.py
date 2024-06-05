@@ -105,8 +105,9 @@ if __name__ == "__main__":
 
     first_process = True
 
-    while True:
-        with concurrent.futures.ProcessPoolExecutor() as executor:
+    # while True:
+    with concurrent.futures.ProcessPoolExecutor() as executor:
+        while True:
             #Event stops running move when new image is done processing
             imaging_complete = multiprocessing.Event()
             #Moves continuously based on previous yaw command until new one is done
@@ -125,4 +126,6 @@ if __name__ == "__main__":
 
             print("yaw rate: ", yaw_rate.result())
             imaging_complete.set()
+
+            imaging_complete.clear()
             
