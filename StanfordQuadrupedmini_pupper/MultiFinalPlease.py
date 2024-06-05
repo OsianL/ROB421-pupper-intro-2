@@ -129,8 +129,8 @@ if __name__ == "__main__":
                 print("yaw rate: ", yaw_result)
                 imaging_complete.set()
 
-                move_result = move.result()
-                print(move_result)
+                # move_result = move.result()
+                # print(move_result)
 
                 imaging_complete.clear()
                 
