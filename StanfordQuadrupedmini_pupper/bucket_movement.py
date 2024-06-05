@@ -42,15 +42,15 @@ def move_servo13(what_degree):
     time.sleep(1)
     os.system("echo 2500000 > /sys/class/pwm/pwmchip0/pwm3/duty_cycle")
     time.sleep(1)
-    os.system("echo 500000 > /sys/class/pwm/pwmchip0/pwm3/duty_cycle")
+    os.system("echo 700000 > /sys/class/pwm/pwmchip0/pwm3/duty_cycle")
 
     print("done")
 
 def main():
     os.system("sudo systemctl stop robot")
     move_servo13(150)
-    time.sleep(1)
-    move_servo13(0)
+    # time.sleep(1)
+    # move_servo13(0)
 
 if __name__ == "__main__":
     main()
