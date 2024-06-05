@@ -18,10 +18,6 @@ def main():
     """Main program
     """
 
-    #Open the claw
-    os.system("echo 2500000 > /sys/class/pwm/pwmchip0/pwm3/duty_cycle")
-    time.sleep(2)
-
     #Setup P loop variables
     x_set_point = 320
     x_kp_value = 0.15/x_set_point
@@ -188,9 +184,13 @@ def main():
 
     #Once Out of the main while loop, move forward and grab the ball:
 
+    #Open the claw
+    os.system("echo 2500000 > /sys/class/pwm/pwmchip0/pwm3/duty_cycle")
+    time.sleep(2)
+
     #Walk forward for 5 seconds
     state.behavior_state = BehaviorState.TROT
-    command.horizontal_velocity = np.array([0.15,0])
+    command.horizontal_velocity = np.array([0.05,0])
 
     walk_forward_time = 5
     start_time = time.time()
