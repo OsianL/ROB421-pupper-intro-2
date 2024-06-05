@@ -1,3 +1,5 @@
+import os
+import sys
 import cv2
 import curses
 import numpy as np
@@ -18,7 +20,7 @@ def main():
 
     #Setup P loop variables
     x_set_point = 320
-    x_kp_value = 0.25/x_set_point
+    x_kp_value = 0.15/x_set_point
     x_pos = 320
 
     y_set_point = 240
@@ -97,6 +99,7 @@ def main():
     last_vision_loop = 0
     now = time.time()
 
+    #In the main while loop, continually check the camera for the ball and move accordingly using two p loops.
     while True:
         #loop time
         last_loop = now
@@ -149,6 +152,7 @@ def main():
 
         else:
 
+            #If needed, pause and wait for the ball to reappear
             if (firstDetectionFlag and not Detection) and (loopsSinceDetection < 3):
                 continue
 
@@ -159,12 +163,17 @@ def main():
             x_error = x_set_point - x_pos
             yaw_rate = x_kp_value * x_error
 
-            print("passed Yaw rate: ", yaw_rate)
-            command.yaw_rate = yaw_rate
-        
             #Calculate the forward velocity as a p controller
             y_error = y_set_point - y_pos
             forward_velo = y_kp_value * y_error
+
+            #Check if both the x and y errors are within tolerance
+            if (x_error < 0.08) and (y_error < 0.08):
+                break
+
+            #Set the yaw and forward rates acording to the p loop
+            print("passed Yaw rate: ", yaw_rate)
+            command.yaw_rate = yaw_rate
 
             print("passed forward_velo: ", forward_velo)
             command.horizontal_velocity = np.array([forward_velo,0])
@@ -172,6 +181,27 @@ def main():
             #Output these values to the robot
             controller.run(state, command, disp)
             hardware_interface.set_actuator_postions(state.joint_angles)
+
+    #Once Out of the main while loop, move forward and grab the ball:
+    #Open the claw
+    #os.system("echo 2500000 > /sys/class/pwm/pwmchip0/pwm3/duty_cycle")
+    #time.sleep(2)
+
+    #Walk forward for 5 seconds
+    state.behavior_state = BehaviorState.TROT
+    command.horizontal_velocity = np.array([0.15,0])
+    
+    walk_forward_time = 5
+    start_time = time.time()
+    while True:
+        if ((time.time() - start_time) > walk_forward_time):
+            break
+        controller.run(state, command, disp)
+        hardware_interface.set_actuator_postions(state.joint_angles)
+
+    #Close the grabber on the ball
+    os.system("echo 500000 > /sys/class/pwm/pwmchip0/pwm3/duty_cycle")
+    time.sleep(3)
 
 
 
